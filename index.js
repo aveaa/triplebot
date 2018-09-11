@@ -60,17 +60,6 @@ bot.on("ready", () => {
                 }
             })
         }
-
-        /*
-            bot.user.setPresence({
-              game: {
-              status: 'Online',
-              url: `https://www.twitch.tv/rustnt`,
-              name: `на канале RusTNT | ${prefix}help`,
-              type: 1 // 0 - Играет в | 1 - Стримит | 2 - Слушает | 3 - Смотрит
-            }
-            })
-        */
     }, 10000)
 
     console.log(``);
@@ -587,7 +576,7 @@ bot.on('message', message => {
             .addField("Причина", rReason, true)
             .setFooter(version, sender.displayAvatarURL)
 
-        let reportsChannel = message.guild.channels.find('name', "📜выговоры_апелляции");
+        let reportsChannel = message.guild.channels.find('name', "reports");
 
         if (!reportsChannel)
             return message.channel.send("Не удалось найти текстовый канал для репортов")
