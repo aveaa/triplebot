@@ -334,7 +334,7 @@ bot.on('message', message => {
 
         let muteLog = new Discord.RichEmbed()
             .setAuthor(name = bot.user.username, icon_url = bIcon)
-            .setDescription(`:white_check_mark: ${toMute} был заткнут на ${muteTime} по причине ${muteReason}`)
+            .setDescription(`:white_check_mark: ${toMute} был заткнут на ${muteTime} по причине ` + '`' + muteReason + '`')
             .setColor(embedColor)
             .setFooter(version, sender.displayAvatarURL)
         message.delete().catch(O_o => { });
@@ -489,7 +489,7 @@ bot.on('message', message => {
     // report
 
     if (cmd === prefix + "report") {
-        if (message.channel.id != '460720014778171412' && message.channel.id != '489049716307525642') {
+        if (message.channel.id != '460720014778171412' && message.channel.id != '489049716307525642' && message.channel.id != '489041917745692673') {
             return;
         }
         let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
