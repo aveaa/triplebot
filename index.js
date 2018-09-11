@@ -8,10 +8,10 @@ const ms = require("ms");
 const prefix = botconfig.prefix;
 console.log('Loading..');
 
-//bot.login(process.env.BOT_TOKEN);
-bot.login(botconfig.token);
+bot.login(process.env.BOT_TOKEN);
+//bot.login(botconfig.token);
 
-let statuses = [`discord.gg/rustnt | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
+let statuses = [`discord.gg/wdatG3E | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
 let types = [0, 1, 2, 3];
 
 bot.on("ready", () => {
@@ -60,17 +60,6 @@ bot.on("ready", () => {
                 }
             })
         }
-
-        /*
-            bot.user.setPresence({
-              game: {
-              status: 'Online',
-              url: `https://www.twitch.tv/rustnt`,
-              name: `на канале RusTNT | ${prefix}help`,
-              type: 1 // 0 - Играет в | 1 - Стримит | 2 - Слушает | 3 - Смотрит
-            }
-            })
-        */
     }, 10000)
 
     console.log(``);
