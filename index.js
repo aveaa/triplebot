@@ -8,8 +8,8 @@ const ms = require("ms");
 const prefix = botconfig.prefix;
 console.log('Loading..');
 
-bot.login(process.env.BOT_TOKEN);
-//bot.login(botconfig.token);
+//bot.login(process.env.BOT_TOKEN);
+bot.login(botconfig.token);
 
 let statuses = [`discord.gg/rustnt | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
 let types = [0, 1, 2, 3];
@@ -60,6 +60,17 @@ bot.on("ready", () => {
                 }
             })
         }
+
+        /*
+            bot.user.setPresence({
+              game: {
+              status: 'Online',
+              url: `https://www.twitch.tv/rustnt`,
+              name: `на канале RusTNT | ${prefix}help`,
+              type: 1 // 0 - Играет в | 1 - Стримит | 2 - Слушает | 3 - Смотрит
+            }
+            })
+        */
     }, 10000)
 
     console.log(``);
@@ -91,6 +102,7 @@ bot.on('message', message => {
             .setColor(embedColor)
             .setDescription(`:small_orange_diamond: Список команд`)
             .addField(`${prefix}info [@ник]`, `Просмотреть информацию о **пользователе**`)
+            .addField(`${prefix}clear [количество]`, `Очистить текстовый канал от **[количества]** сообщений`)
             .addField(`${prefix}mute [@ник] [причина]`, `Заткнуть **пользователя**`)
             .addField(`${prefix}unmute [@ник]`, `Размутить **пользователя**`)
             .addField(`${prefix}botinfo`, `Просмотреть информацию о **боте**`)
@@ -312,7 +324,7 @@ bot.on('message', message => {
         if (!muteReason) {
             let muteNoReasonEmbed = new Discord.RichEmbed()
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
-                .setDescription(":x: @" + sender.username + ", **вы** не указали причину")
+                .setDescription(":x: **Вы** не указали причину")
                 .setColor(embedColor)
                 .setFooter(version, sender.displayAvatarURL)
 
@@ -576,7 +588,7 @@ bot.on('message', message => {
             .addField("Причина", rReason, true)
             .setFooter(version, sender.displayAvatarURL)
 
-        let reportsChannel = message.guild.channels.find('name', "reports");
+        let reportsChannel = message.guild.channels.find('name', "репорты");
 
         if (!reportsChannel)
             return message.channel.send("Не удалось найти текстовый канал для репортов")
