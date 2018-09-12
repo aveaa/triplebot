@@ -8,8 +8,8 @@ const ms = require("ms");
 const prefix = botconfig.prefix;
 console.log('Loading..');
 
-bot.login(process.env.BOT_TOKEN);
-//bot.login(botconfig.token);
+//bot.login(process.env.BOT_TOKEN);
+bot.login(botconfig.token);
 
 let statuses = [`discord.gg/wdatG3E | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
 let types = [0, 1, 2, 3];
@@ -99,6 +99,19 @@ bot.on('message', message => {
             .setFooter(version, sender.displayAvatarURL)
 
         return message.channel.send(helpEmbed);
+    }
+
+    // check
+
+    if (cmd === prefix + "check") {
+        let senderGame = sender.presence.game;
+
+        if (senderGame == "Grand Theft Auto V") {
+            message.member.addRole(message.guild.roles.find(`name`, "GTA V").id)
+        }
+        if (senderGame == "relapse.bot") {
+            message.member.addRole(message.guild.roles.find(`name`, "test4").id)
+        }
     }
 
     // botinfo
@@ -237,7 +250,7 @@ bot.on('message', message => {
                 .setColor(embedColor)
                 .setDescription(`:x: Нельзя заткнуть самого себя`)
                 .setFooter(version, sender.displayAvatarURL)
-        
+
             message.delete().catch(O_o => { });
             return message.channel.send(toMuteCantMuteUrSelf);
         }
@@ -348,7 +361,7 @@ bot.on('message', message => {
         functionMuteTwo();
 
         setTimeout(function () {
-            if(!toMute.roles.find('name', muterole)) {
+            if (!toMute.roles.find('name', 'Осуждённый')) {
                 return;
             }
             toMute.removeRole(muterole.id);
