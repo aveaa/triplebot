@@ -8,8 +8,8 @@ const ms = require("ms");
 const prefix = botconfig.prefix;
 console.log('Loading..');
 
-//bot.login(process.env.BOT_TOKEN);
-bot.login(botconfig.token);
+bot.login(process.env.BOT_TOKEN);
+//bot.login(botconfig.token);
 
 let statuses = [`discord.gg/wdatG3E | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
 let types = [0, 1, 2, 3];
