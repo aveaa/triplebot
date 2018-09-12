@@ -288,7 +288,7 @@ bot.on('message', message => {
 
         let muteParameters = args.join(' ').slice(22);
         let muteTime = args[1];
-        if (!message.member.roles.find("name", "Агент ЦРУ") && !message.member.roles.find("name", "Спец.Агент ЦРУ") && !message.member.roles.find("name", "Директор ЦРУ")) {
+        if (!message.member.roles.find("name", "Агент ЦРУ") && !message.member.roles.find("name", "Спец.Агент ЦРУ") && !message.member.roles.find("name", "Штаб")) {
             let muteNoPerms = new Discord.RichEmbed()
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
                 .setColor(embedColor)
@@ -378,7 +378,7 @@ bot.on('message', message => {
                 let clearNoRoleEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
                     .setColor(embedColor)
-                    .setDescription(`У **вас** нет доступа к команде ${prefix}clear`)
+                    .setDescription(`:x: У **вас** нет доступа к команде ${prefix}clear`)
                     .setFooter(version, sender.displayAvatarURL)
 
                 message.channel.send(clearNoRoleEmbed);
@@ -389,7 +389,7 @@ bot.on('message', message => {
                 let clearNoNumEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
                     .setColor(embedColor)
-                    .setDescription("Не указано количество сообщений")
+                    .setDescription(":small_orange_diamond: Не указано количество сообщений")
                     .setFooter(version, sender.displayAvatarURL)
                 message.channel.send(clearNoNumEmbed);
                 return message.channel.send(clearSpellingEmbed);
