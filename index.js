@@ -33,7 +33,7 @@ bot.on("ready", () => {
         if (type == 1) {
             bot.user.setPresence({
                 game: {
-                    url: 'https://www.youtube.com/user/AppleBiology',
+                    url: 'https://www.twitch.tv/advakat20',
                     name: `Список команд | ${prefix}help`,
                     status: 'Online',
                     type: type
