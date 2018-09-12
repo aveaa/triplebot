@@ -348,7 +348,9 @@ bot.on('message', message => {
         functionMuteTwo();
 
         setTimeout(function () {
-            if(toMute.roles.find('name', muterole))
+            if(!toMute.roles.find('name', muterole)) {
+                return;
+            }
             toMute.removeRole(muterole.id);
             let muteMuted = new Discord.RichEmbed()
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
