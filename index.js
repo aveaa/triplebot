@@ -5,11 +5,14 @@ const bot = new Discord.Client()
 const botconfig = require('./botconfig.json')
 const fs = require("fs");
 const ms = require("ms");
+const ytdl = require('ytdl-core');
 const prefix = botconfig.prefix;
 console.log('Loading..');
 
 bot.login(process.env.BOT_TOKEN);
 //bot.login(botconfig.token);
+
+let rp = require('./Storage/rp.json');
 
 let statuses = [`discord.gg/wdatG3E | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
 let types = [0, 1, 2, 3];
@@ -62,13 +65,54 @@ bot.on("ready", () => {
         }
     }, 10000)
 
+    console.log(`Bot is ready to go!`)
+
     console.log(``);
-    console.log("Бот запущен");
-    console.log(" ");
-    console.log(`Discord Тег: ${bot.user.tag}`);
-    console.log(`Discord ID: ${bot.user.id}`);
-    console.log(``);
-    console.log(`Код писал http://relapse.pw`);
+
+    setTimeout(function () {
+        console.log(` ________  _______   ___       ________  ________  ________  _______`)
+    }, 500)
+    setTimeout(function () {
+        console.log(`|\\   __  \\|\\  ___ \\ |\\  \\     |\\   __  \\|\\   __  \\|\\   ____\\|\\  ___ \\`)
+    }, 1000)
+    setTimeout(function () {
+        console.log(`\\ \\  \\|\\  \\ \\   __/|\\ \\  \\    \\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\___|\\ \\   __/|`)
+    }, 1500)
+    setTimeout(function () {
+        console.log(` \\ \\   _  _\\ \\  \\_|/_\\ \\  \\    \\ \\   __  \\ \\   ____\\ \\_____  \\ \\  \\_|/__`)
+    }, 2000)
+    setTimeout(function () {
+        console.log(`  \\ \\  \\\\  \\\\ \\  \\_|\\ \\ \\  \\____\\ \\  \\ \\  \\ \\  \\___|\\|____|\\  \\ \\  \\_|\\ \\`)
+    }, 2500)
+    setTimeout(function () {
+        console.log(`   \\ \\__\\\\ _\\\\ \\_______\\ \\_______\\ \\__\\ \\__\\ \\__\\     ____\\_\\  \\ \\_______\\`)
+    }, 3000)
+    setTimeout(function () {
+        console.log(`    \\|__|\\|__|\\|_______|\\|_______|\\|__|\\|__|\\|__|    |\\_________\\|_______|`)
+    }, 3500)
+    setTimeout(function () {
+        console.log(`                                                     \\|_________|`)
+    }, 4000)
+    setTimeout(function () {
+        console.log(` `);
+
+        console.log(`Код писал http://relapse.pw`);
+    }, 4500)
+
+    /*
+    
+ ________  _______   ___       ________  ________  ________  _______
+|\   __  \|\  ___ \ |\  \     |\   __  \|\   __  \|\   ____\|\  ___ \
+\ \  \|\  \ \   __/|\ \  \    \ \  \|\  \ \  \|\  \ \  \___|\ \   __/|
+ \ \   _  _\ \  \_|/_\ \  \    \ \   __  \ \   ____\ \_____  \ \  \_|/__
+  \ \  \\  \\ \  \_|\ \ \  \____\ \  \ \  \ \  \___|\|____|\  \ \  \_|\ \
+   \ \__\\ _\\ \_______\ \_______\ \__\ \__\ \__\     ____\_\  \ \_______\
+    \|__|\|__|\|_______|\|_______|\|__|\|__|\|__|    |\_________\|_______|
+                                                     \|_________|
+
+
+    
+    */
 });
 
 bot.on('message', message => {
@@ -82,6 +126,24 @@ bot.on('message', message => {
     let bIcon = bot.user.displayAvatarURL;
     let sIcon = sender.displayAvatarURL;
     let embedColor = Math.floor(Math.random() * 16777214) + 1;
+
+    // Without .toLowerCase();
+    let normalMsg = message.content;
+    let normalMessageArray = normalMsg.split(' ');
+    let normalCmd = normalMessageArray[0];
+    let normalArgs = normalMessageArray.slice(1);
+
+    // data
+
+    if (cmd === prefix + "data") {
+        console.log(' ');
+        console.log(' ');
+        console.log(' ');
+        console.log(`rp: ${fs.readFileSync('Storage/rp.json', 'utf8')}`)
+        console.log(' ');
+        console.log(' ');
+        console.log(' ');
+    }
 
     // help
 
@@ -101,16 +163,159 @@ bot.on('message', message => {
         return message.channel.send(helpEmbed);
     }
 
-    // check
+    if (message.author.id == "356485223250264064" || message.author.id == "351441278174494720" || message.author.id == "301218562146566146") {
 
-    if (cmd === prefix + "check") {
-        let senderGame = sender.presence.game;
+        // create
 
-        if (senderGame == "Grand Theft Auto V") {
-            message.member.addRole(message.guild.roles.find(`name`, "GTA V").id)
+        if (!rp[message.author.id + message.guild.id]) {
+            rp[message.author.id + message.guild.id] = {
+                name: 0,
+                class: "Не выбран",
+                level: 1
+            };
         }
-        if (senderGame == "relapse.bot") {
-            message.member.addRole(message.guild.roles.find(`name`, "test4").id)
+
+        if (cmd === prefix + "create") {
+            if (rp[message.author.id + message.guild.id].name) {
+                let createPersonAlreadyCreatedEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: У **вас** уже есть персонаж, для просмотра введите **${prefix}profile**`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(createPersonAlreadyCreatedEmbed);
+            }
+
+            let createName = normalArgs[0];
+            let createSurName = normalArgs[1];
+
+            if (!createSurName) {
+                rp[message.author.id + message.guild.id].name = createName;
+
+                fs.writeFile('./Storage/rp.json', JSON.stringify(rp), (err) => {
+                    if (err) console.log(err);
+                });
+
+                let createPersonEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:white_check_mark: Персонаж успешно создан`)
+                    .addField(`Имя :large_blue_circle:`, `${createName}`, true)
+                    .addField(`Уровень :gem:`, `1`, true)
+                    .addField(`Класс :crossed_swords:`, `Не выбран`, true)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(createPersonEmbed);
+            }
+
+            rp[message.author.id + message.guild.id].name = createName + ' ' + createSurName;
+
+            fs.writeFile('./Storage/rp.json', JSON.stringify(rp), (err) => {
+                if (err) console.log(err);
+            });
+
+            let createPersonEmbed = new Discord.RichEmbed()
+                .setAuthor(name = bot.user.username, icon_url = bIcon)
+                .setColor(embedColor)
+                .setDescription(`:white_check_mark: Персонаж успешно создан`)
+                .addField(`Имя :large_blue_circle:`, `${createName} ${createSurName}`, true)
+                .addField(`Уровень :gem:`, `1`, true)
+                .addField(`Класс :crossed_swords:`, `Не выбран`, true)
+                .setFooter(version, sender.displayAvatarURL)
+
+            return message.channel.send(createPersonEmbed);
+        }
+
+        // profile
+
+        if (cmd === prefix + "profile") {
+            if (!rp[message.author.id + message.guild.id].name) {
+                let profileNoPersonEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: У **вас** ещё нету профиля, для создания используйте команду **${prefix}create**`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(profileNoPersonEmbed);
+            }
+            let profilePersonEmbed = new Discord.RichEmbed()
+                .setAuthor(name = bot.user.username, icon_url = bIcon)
+                .setColor(embedColor)
+                .setDescription(`:small_orange_diamond: Профиль`)
+                .addField(`Имя :large_blue_circle:`, `${rp[message.author.id + message.guild.id].name}`, true)
+                .addField(`Уровень :gem:`, `${rp[message.author.id + message.guild.id].level}`, true)
+                .addField(`Класс :crossed_swords:`, `${rp[message.author.id + message.guild.id].class}`, true)
+                .setFooter(version, sender.displayAvatarURL)
+
+            return message.channel.send(profilePersonEmbed);
+        }
+
+        // class
+
+        if (cmd === prefix + "class") {
+            let classLocalized;
+            if (!rp[message.author.id + message.guild.id].name) {
+                let classNoPersonEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: **Ваш** персонаж не найден! Сперва создайте персонажа с помощью команды **${prefix}create**`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(classNoPersonEmbed);
+            }
+
+            if (rp[message.author.id + message.guild.id].class != "Не выбран") {
+                let createPersonAlreadyCreatedEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: У **вас** уже есть класс, для смены введите **${prefix}switch**`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(createPersonAlreadyCreatedEmbed);
+            }
+
+            let className = args[0];
+
+            if (!className) {
+                let classNoNameEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: **Вы** не ввели название класса`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(classNoNameEmbed);
+            }
+
+            if (className == "warrior" || className == "воин") {
+                classLocalized = "Воин";
+
+                rp[message.author.id + message.guild.id].class = classLocalized;
+
+                fs.writeFile('./Storage/rp.json', JSON.stringify(rp), (err) => {
+                    if (err) console.log(err);
+                });
+            }
+
+            else {
+                let classInvalidEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: Класс **"${className}"** не был найден в базе данных`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                return message.channel.send(classInvalidEmbed);
+            }
+
+            let classChooseEmbed = new Discord.RichEmbed()
+                .setAuthor(name = bot.user.username, icon_url = bIcon)
+                .setColor(embedColor)
+                .setDescription(`:white_check_mark: Класс "${classLocalized}" был успешно присвоен вашему персонажу`)
+                .addField(`Имя :large_blue_circle:`, `${rp[message.author.id + message.guild.id].name}`, true)
+                .addField(`Уровень :gem:`, `${rp[message.author.id + message.guild.id].level}`, true)
+                .addField(`Класс :crossed_swords:`, `${classLocalized}`, true)
+                .setFooter(version, sender.displayAvatarURL)
+
+            return message.channel.send(classChooseEmbed);
         }
     }
 
@@ -224,7 +429,7 @@ bot.on('message', message => {
     // mute
 
     if (cmd === prefix + "mute") {
-        let toMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+        let toMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(normalArgs[0]));
         let toMuteSpellingEmbed = new Discord.RichEmbed()
             .setAuthor(name = bot.user.username, icon_url = bIcon)
             .setColor(embedColor)
@@ -299,7 +504,7 @@ bot.on('message', message => {
             functionMuteOne();
         }
 
-        let muteParameters = args.join(' ').slice(22);
+        let muteParameters = normalArgs.join(' ').slice(22);
         let muteTime = args[1];
         if (!message.member.roles.find("name", "Агент ЦРУ") && !message.member.roles.find("name", "Спец.Агент ЦРУ") && !message.member.roles.find("name", "Штаб")) {
             let muteNoPerms = new Discord.RichEmbed()
@@ -437,7 +642,7 @@ bot.on('message', message => {
     // unmute
 
     if (cmd === prefix + "unmute") {
-        let toUnMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+        let toUnMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(normalArgs[0]));
         let UnMuteSpellingEmbed = new Discord.RichEmbed()
             .setAuthor(name = bot.user.username, icon_url = bIcon)
             .setColor(embedColor)
@@ -508,7 +713,7 @@ bot.on('message', message => {
         if (message.channel.id != '460720014778171412' && message.channel.id != '489049716307525642' && message.channel.id != '489041917745692673') {
             return;
         }
-        let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+        let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(normalArgs[0]));
         let rSpellingEmbed = new Discord.RichEmbed()
             .setAuthor(name = bot.user.username, icon_url = bIcon)
             .setDescription(`:small_orange_diamond: Правописание ${prefix}report`)
@@ -537,7 +742,7 @@ bot.on('message', message => {
             return message.channel.send(rCantReportUrSelf);
         }
 
-        let rReason = args.join(' ').slice(22);
+        let rReason = normalArgs.join(' ').slice(22);
         if (!rReason) {
             let rNoReasonEmbed = new Discord.RichEmbed()
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
