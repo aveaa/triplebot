@@ -12,7 +12,7 @@ console.log('Loading..');
 bot.login(process.env.BOT_TOKEN);
 //bot.login(botconfig.token);
 
-let rp = require('./Storage/rp.json');
+let rp = require('./rp.json');
 
 let statuses = [`discord.gg/wdatG3E | ${prefix}help`, `ролики RusTNT | ${prefix}help`];
 let types = [0, 1, 2, 3];
@@ -139,7 +139,7 @@ bot.on('message', message => {
         console.log(' ');
         console.log(' ');
         console.log(' ');
-        console.log(`rp: ${fs.readFileSync('Storage/rp.json', 'utf8')}`)
+        console.log(`rp: ${fs.readFileSync('rp.json', 'utf8')}`)
         console.log(' ');
         console.log(' ');
         console.log(' ');
@@ -192,7 +192,7 @@ bot.on('message', message => {
             if (!createSurName) {
                 rp[message.author.id + message.guild.id].name = createName;
 
-                fs.writeFile('./Storage/rp.json', JSON.stringify(rp), (err) => {
+                fs.writeFile('./rp.json', JSON.stringify(rp), (err) => {
                     if (err) console.log(err);
                 });
 
@@ -210,7 +210,7 @@ bot.on('message', message => {
 
             rp[message.author.id + message.guild.id].name = createName + ' ' + createSurName;
 
-            fs.writeFile('./Storage/rp.json', JSON.stringify(rp), (err) => {
+            fs.writeFile('./rp.json', JSON.stringify(rp), (err) => {
                 if (err) console.log(err);
             });
 
@@ -291,7 +291,7 @@ bot.on('message', message => {
 
                 rp[message.author.id + message.guild.id].class = classLocalized;
 
-                fs.writeFile('./Storage/rp.json', JSON.stringify(rp), (err) => {
+                fs.writeFile('./rp.json', JSON.stringify(rp), (err) => {
                     if (err) console.log(err);
                 });
             }
