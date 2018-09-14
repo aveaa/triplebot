@@ -263,17 +263,6 @@ bot.on('message', message => {
         function classes(classFunction) {
             let classLocalized;
 
-            if (!classFunction) {
-                let classNoNameEmbed = new Discord.RichEmbed()
-                    .setAuthor(name = bot.user.username, icon_url = bIcon)
-                    .setColor(embedColor)
-                    .setDescription(`:x: **Вы** не ввели название класса`)
-                    .setFooter(version, sender.displayAvatarURL)
-
-                message.delete().catch(O_o => { });
-                return message.channel.send(classNoNameEmbed);
-            }
-
             if (classFunction == "warrior" || classFunction == "воин") {
                 classLocalized = "Воин";
 
@@ -322,6 +311,18 @@ bot.on('message', message => {
         // class
 
         if (cmd === prefix + "class") {
+            let className = args[0];
+            if (!className) {
+                let classNoNameEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: **Вы** не ввели название класса`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                message.delete().catch(O_o => { });
+                return message.channel.send(classNoNameEmbed);
+            }
+
             if (!rp[message.author.id + message.guild.id].name) {
                 let classNoPersonEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
@@ -344,13 +345,35 @@ bot.on('message', message => {
                 return message.channel.send(createPersonAlreadyCreatedEmbed);
             }
 
-            let className = args[0];
             classes(className);
         }
 
         // switch
 
         if (cmd === prefix + "switch") {
+            let switchClassName = args[0];
+            if (!switchClassName) {
+                let classNoNameEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: **Вы** не ввели название класса`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                message.delete().catch(O_o => { });
+                return message.channel.send(classNoNameEmbed);
+            }
+
+            if (switchClassName == rp[message.sender.id + message.guild.id].class) {
+                let classNoNameEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: У **вас** уже стоит класс ` + "`" + `${switchClassName}` + "`")
+                    .setFooter(version, sender.displayAvatarURL)
+
+                message.delete().catch(O_o => { });
+                return message.channel.send
+            }
+
             if (!rp[message.author.id + message.guild.id].name) {
                 let switchNoPersonEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
@@ -373,7 +396,6 @@ bot.on('message', message => {
                 return message.channel.send(switchNoPersClassEmbed);
             }
 
-            let switchClassName = args[0];
             classes(switchClassName);
         }
     }
