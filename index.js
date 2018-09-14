@@ -284,6 +284,16 @@ bot.on('message', message => {
                 });
             }
 
+            if (classFunction == "medic" || classFunction == "медик") {
+                classLocalized = "Медик";
+
+                rp[message.author.id + message.guild.id].class = classLocalized;
+
+                fs.writeFile('./rp.json', JSON.stringify(rp), (err) => {
+                    if (err) console.log(err);
+                });
+            }
+
             else {
                 let classInvalidEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
@@ -299,7 +309,7 @@ bot.on('message', message => {
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
                 .setThumbnail(sender.displayAvatarURL)
                 .setColor(embedColor)
-                .setDescription(":white_check_mark: Класс `" + `${classLocalized}` + "`был успешно присвоен вашему персонажу")
+                .setDescription(":white_check_mark: Класс `" + `${classLocalized}` + "` был успешно присвоен вашему персонажу")
                 .addField(`Имя :large_blue_circle:`, `${rp[message.author.id + message.guild.id].name}`, true)
                 .addField(`Уровень :gem:`, `${rp[message.author.id + message.guild.id].level}`, true)
                 .addField(`Класс :crossed_swords:`, `${classLocalized}`, true)
