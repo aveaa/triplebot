@@ -199,6 +199,7 @@ bot.on('message', message => {
 
                 let createPersonEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setThumbnail(sender.displayAvatarURL)
                     .setColor(embedColor)
                     .setDescription(`:white_check_mark: Персонаж успешно создан`)
                     .addField(`Имя :large_blue_circle:`, `${createName}`, true)
@@ -218,6 +219,7 @@ bot.on('message', message => {
 
             let createPersonEmbed = new Discord.RichEmbed()
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
+                .setThumbnail(sender.displayAvatarURL)
                 .setColor(embedColor)
                 .setDescription(`:white_check_mark: Персонаж успешно создан`)
                 .addField(`Имя :large_blue_circle:`, `${createName} ${createSurName}`, true)
@@ -246,6 +248,7 @@ bot.on('message', message => {
                 .setAuthor(name = bot.user.username, icon_url = bIcon)
                 .setColor(embedColor)
                 .setDescription(`:small_orange_diamond: Профиль`)
+                .setThumbnail(sender.displayAvatarURL)
                 .addField(`Имя :large_blue_circle:`, `${rp[message.author.id + message.guild.id].name}`, true)
                 .addField(`Уровень :gem:`, `${rp[message.author.id + message.guild.id].level}`, true)
                 .addField(`Класс :crossed_swords:`, `${rp[message.author.id + message.guild.id].class}`, true)
@@ -255,10 +258,60 @@ bot.on('message', message => {
             return message.channel.send(profilePersonEmbed);
         }
 
+        // classes
+
+        function classes(classFunction) {
+            let classLocalized;
+
+            if (!classFunction) {
+                let classNoNameEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: **Вы** не ввели название класса`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                message.delete().catch(O_o => { });
+                return message.channel.send(classNoNameEmbed);
+            }
+
+            if (classFunction == "warrior" || classFunction == "воин") {
+                classLocalized = "Воин";
+
+                rp[message.author.id + message.guild.id].class = classLocalized;
+
+                fs.writeFile('./rp.json', JSON.stringify(rp), (err) => {
+                    if (err) console.log(err);
+                });
+            }
+
+            else {
+                let classInvalidEmbed = new Discord.RichEmbed()
+                    .setAuthor(name = bot.user.username, icon_url = bIcon)
+                    .setColor(embedColor)
+                    .setDescription(`:x: Класс ` + "`" + `${classFunction}` + "`" + ` не найден в базе данных`)
+                    .setFooter(version, sender.displayAvatarURL)
+
+                message.delete().catch(O_o => { });
+                return message.channel.send(classInvalidEmbed);
+            }
+
+            let classChooseEmbed = new Discord.RichEmbed()
+                .setAuthor(name = bot.user.username, icon_url = bIcon)
+                .setThumbnail(sender.displayAvatarURL)
+                .setColor(embedColor)
+                .setDescription(":white_check_mark: Класс `" + `${classLocalized}` + "`был успешно присвоен вашему персонажу")
+                .addField(`Имя :large_blue_circle:`, `${rp[message.author.id + message.guild.id].name}`, true)
+                .addField(`Уровень :gem:`, `${rp[message.author.id + message.guild.id].level}`, true)
+                .addField(`Класс :crossed_swords:`, `${classLocalized}`, true)
+                .setFooter(version, sender.displayAvatarURL)
+
+            message.delete().catch(O_o => { });
+            return message.channel.send(classChooseEmbed);
+        }
+
         // class
 
         if (cmd === prefix + "class") {
-            let classLocalized;
             if (!rp[message.author.id + message.guild.id].name) {
                 let classNoPersonEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
@@ -282,50 +335,36 @@ bot.on('message', message => {
             }
 
             let className = args[0];
+            classes(className);
+        }
 
-            if (!className) {
-                let classNoNameEmbed = new Discord.RichEmbed()
+        // switch
+
+        if (cmd === prefix + "switch") {
+            if (!rp[message.author.id + message.guild.id].name) {
+                let switchNoPersonEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
                     .setColor(embedColor)
-                    .setDescription(`:x: **Вы** не ввели название класса`)
+                    .setDescription(":x: **Ваш** персонаж не найден! Сперва создайте персонажа с помощью команды `" + `${prefix}create` + "`")
                     .setFooter(version, sender.displayAvatarURL)
 
                 message.delete().catch(O_o => { });
-                return message.channel.send(classNoNameEmbed);
+                return message.channel.send(switchNoPersonEmbed);
             }
 
-            if (className == "warrior" || className == "воин") {
-                classLocalized = "Воин";
-
-                rp[message.author.id + message.guild.id].class = classLocalized;
-
-                fs.writeFile('./rp.json', JSON.stringify(rp), (err) => {
-                    if (err) console.log(err);
-                });
-            }
-
-            else {
-                let classInvalidEmbed = new Discord.RichEmbed()
+            if (rp[message.author.id + message.guild.id].class == "Не выбран") {
+                let switchNoPersClassEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
                     .setColor(embedColor)
-                    .setDescription(`:x: Класс` + "`" + `${className}` + "`" + `не был найден в базе данных`)
+                    .setDescription(":x: У **вашего** персонажа нету никаких классов для замены. Сперва выберите класс с помощью команды `" + `${prefix}class` + "`")
                     .setFooter(version, sender.displayAvatarURL)
 
                 message.delete().catch(O_o => { });
-                return message.channel.send(classInvalidEmbed);
+                return message.channel.send(switchNoPersClassEmbed);
             }
 
-            let classChooseEmbed = new Discord.RichEmbed()
-                .setAuthor(name = bot.user.username, icon_url = bIcon)
-                .setColor(embedColor)
-                .setDescription(":white_check_mark: Класс `" + `${classLocalized}` + "`был успешно присвоен вашему персонажу")
-                .addField(`Имя :large_blue_circle:`, `${rp[message.author.id + message.guild.id].name}`, true)
-                .addField(`Уровень :gem:`, `${rp[message.author.id + message.guild.id].level}`, true)
-                .addField(`Класс :crossed_swords:`, `${classLocalized}`, true)
-                .setFooter(version, sender.displayAvatarURL)
-
-            message.delete().catch(O_o => { });
-            return message.channel.send(classChooseEmbed);
+            let switchClassName = args[0];
+            classes(switchClassName);
         }
     }
 
