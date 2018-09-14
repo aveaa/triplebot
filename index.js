@@ -264,6 +264,17 @@ bot.on('message', message => {
             let classLocalized;
 
             if (classFunction == "warrior" || classFunction == "воин") {
+                if (rp[message.author.id + message.guild.id].class == "warrior") {
+                    let switchHaveAlreadyEmbed = new Discord.RichEmbed()
+                        .setAuthor(name = bot.user.username, icon_url = bIcon)
+                        .setColor(embedColor)
+                        .setDescription(`:x: У **вас** уже стоит класс ` + "`" + `${switchClassName}` + "`")
+                        .setFooter(version, sender.displayAvatarURL)
+
+                    message.delete().catch(O_o => { });
+                    return message.channel.send(switchHaveAlreadyEmbed);
+                }
+
                 classLocalized = "Воин";
 
                 rp[message.author.id + message.guild.id].class = classLocalized;
@@ -361,17 +372,6 @@ bot.on('message', message => {
 
                 message.delete().catch(O_o => { });
                 return message.channel.send(classNoNameEmbed);
-            }
-
-            if (switchClassName == rp[message.author.id + message.guild.id].class) {
-                let classNoNameEmbed = new Discord.RichEmbed()
-                    .setAuthor(name = bot.user.username, icon_url = bIcon)
-                    .setColor(embedColor)
-                    .setDescription(`:x: У **вас** уже стоит класс ` + "`" + `${switchClassName}` + "`")
-                    .setFooter(version, sender.displayAvatarURL)
-
-                message.delete().catch(O_o => { });
-                return message.channel.send
             }
 
             if (!rp[message.author.id + message.guild.id].name) {
