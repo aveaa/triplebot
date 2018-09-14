@@ -273,7 +273,7 @@ bot.on('message', message => {
                 });
             }
 
-            if (classFunction == "medic" || classFunction == "медик") {
+            else if (classFunction == "medic" || classFunction == "медик") {
                 classLocalized = "Медик";
 
                 rp[message.author.id + message.guild.id].class = classLocalized;
