@@ -363,7 +363,7 @@ bot.on('message', message => {
                 return message.channel.send(classNoNameEmbed);
             }
 
-            if (switchClassName == rp[message.sender.id + message.guild.id].class) {
+            if (switchClassName == rp[message.author.id + message.guild.id].class) {
                 let classNoNameEmbed = new Discord.RichEmbed()
                     .setAuthor(name = bot.user.username, icon_url = bIcon)
                     .setColor(embedColor)
